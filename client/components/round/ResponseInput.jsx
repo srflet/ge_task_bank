@@ -152,7 +152,7 @@ export default class ResponseInput extends React.Component {
 
       // If it is a discreet social stage
       if (interactionMode === "discreet" && stage.name === "social") {
-        return ("Waiting for the other players...")
+        return ("Submitted... waiting for the other players")
       }
 
       // Otherwise say that it is submitted, and waiting for others if there are others
@@ -292,7 +292,7 @@ export default class ResponseInput extends React.Component {
                 text={
                   player.stage.submitted
                     ? interactionMode === "discreet" && stage.name === "social"
-                      ? "Waiting for the other players..."
+                      ? "Submitted... waiting for the other players"
                       : "Submitted"
                     : interactionMode === "discreet" && stage.name === "social"
                       ? "OK"

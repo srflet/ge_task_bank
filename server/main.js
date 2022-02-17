@@ -2,7 +2,7 @@ import Empirica from "meteor/empirica:core";
 import { Configs } from "../shared/api/collectionAdminGlobalConfigs.js";
 import { avatarNames } from "../shared/avatars.js";
 import { getChatGroups, getNeighbors } from "../shared/helper";
-import { instructions, taskData } from "../shared/tasks/tasks";
+import { instructions, taskData } from "../shared/tasks/default-tasks";
 import "./bots.js";
 import "./callbacks.js";
 
@@ -10,10 +10,12 @@ Meteor.publish('admin-global-configs', function publishTasks() {
   return Configs.find({})
 })
 
-// Configs.insert({ timeToStart: "18:45", maxBuffer: 0, loginRefresh: 60, prolificCode: "" })
+Configs.insert({ timeToStart: "08:10", maxBuffer: 0, loginRefresh: 60, prolificCode: "" })
 // console.log(Configs.find({}).fetch())
-// Configs.remove("tcGNDskmbCxbZEQon")
-// Configs.remove("EDF6EBiB86iTTPLSm")
+// Configs.remove("hBqte6SN6xPbgAqPe")
+// Configs.remove("NinMyymCiBQdfkLcg")
+
+
 
 // Set true while developing to set very large duration on stages.
 const isDebugTime = Meteor.isDevelopment && false;
@@ -42,6 +44,7 @@ Empirica.gameInit((game) => {
       interactionMode,
       chatGroups,
       chat = false,
+      type="solo"
     },
   } = game;
 
@@ -156,7 +159,7 @@ Empirica.gameInit((game) => {
       round.addStage({
         name: "response",
         displayName: "Response",
-        durationInSeconds: isDebugTime ? 31540000 : responseDuration,
+        durationInSeconds: Time ? 31540000 : responseDuration,
       });
     } else {
       //...otherwise, just create one response stage...
@@ -167,7 +170,7 @@ Empirica.gameInit((game) => {
       });
 
       //...and create one social stage if this is a continuous interaction mode
-      if (interactionMode === "continuous" && playerCount > 1) {
+      if (interactionMode === "continuous" && playerCount > 1 && type === "social") {
         round.addStage({
           name: "social",
           displayName: "Social",

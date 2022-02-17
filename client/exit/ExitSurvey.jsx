@@ -110,7 +110,7 @@ export default class ExitSurvey extends React.Component {
                 <div>
                   <Label
                     htmlFor="feedback"
-                    text="Any feedback (including problems you may have encountered)?"
+                    text="Any feedback - especially technical problems you encountered?"
                   />
                   <div>
                     <Textarea

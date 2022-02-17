@@ -1,4 +1,5 @@
 import Empirica from "meteor/empirica:core";
+import React, { Component } from 'react'
 import { render } from "react-dom";
 import Waiting from "./components/Waiting";
 import ExitSurvey from "./exit/ExitSurvey";
@@ -21,7 +22,7 @@ const isDev = false
 if (!isDev) {
 
   // Set the Consent Component you want to present players (optional).
-  Empirica.consent(WaitingConsent);
+  //Empirica.consent(WaitingConsent);
 
   // Introduction pages to show before they play the game (optional).
   // At this point they have been assigned a treatment. You can return
@@ -33,13 +34,23 @@ if (!isDev) {
       introSteps.push(Username)
     }
 
-    // introSteps.push(WaitingPage)
+    introSteps.push(WaitingPage)
 
     return introSteps
     // return [WaitingPage]
   })
 
 }
+
+const Lobby = ({ player, gameLobby }) => (
+  <header className="lobby">
+    <h1>Please wait until the game is ready...</h1>
+    <p>
+      This may take up to 1 minute.
+    </p>
+  </header>
+);
+Empirica.lobby(Lobby);
 
 // Set the About Component you want to use for the About dialog (optional).
 // Empirica.about(About);
@@ -74,7 +85,7 @@ Empirica.exitSteps((game, player) => {
   ) {
     return [Sorry];
   }
-  return [ExitSurvey, WaitingThankYou];
+  return [ExitSurvey, Thanks];
 });
 
 // Start the app render tree.
