@@ -12,6 +12,7 @@ import Instructions from "./intro/Instructions";
 import NewPlayerForm from "./intro/NewPlayerForm";
 import Quiz from "./intro/Quiz";
 import Username from "./intro/Username"
+import Layout from "./intro/Layout";
 import AttentionCheck from "./intro/AttentionCheck"
 import WaitingPage from "./intro/wait-timer/WaitingPage";
 import WaitingConsent from "./intro/wait-timer/WaitingConsent";
@@ -28,16 +29,19 @@ if (!isDev) {
   // At this point they have been assigned a treatment. You can return
   // different instruction steps depending on the assigned treatment.
   Empirica.introSteps((game, treatment) => {
-
-    const introSteps = [Instructions]
+    if (treatment.stage === "first") {
+      const introSteps = [Instructions]
     if (treatment.playerCount > 1) {
       introSteps.push(Username)
     }
-
+    introSteps.push(Layout)
     introSteps.push(WaitingPage)
 
     return introSteps
-    // return [WaitingPage]
+    }
+    
+    return [WaitingPage]
+    return
   })
 
 }

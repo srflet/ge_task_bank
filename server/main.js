@@ -1,5 +1,6 @@
 import Empirica from "meteor/empirica:core";
 import { Configs } from "../shared/api/collectionAdminGlobalConfigs.js";
+import { PlayerEstimates } from "../shared/api/PlayerEstimates.js";
 import { avatarNames } from "../shared/avatars.js";
 import { getChatGroups, getNeighbors } from "../shared/helper";
 import { instructions, taskData } from "../shared/tasks/default-tasks";
@@ -10,10 +11,22 @@ Meteor.publish('admin-global-configs', function publishTasks() {
   return Configs.find({})
 })
 
-Configs.insert({ timeToStart: "08:10", maxBuffer: 0, loginRefresh: 60, prolificCode: "" })
-// console.log(Configs.find({}).fetch())
-// Configs.remove("hBqte6SN6xPbgAqPe")
-// Configs.remove("NinMyymCiBQdfkLcg")
+Configs.insert({ timeToStart: "17:19", maxBuffer: 0, loginRefresh: 60, prolificCode: "" })
+console.log(Configs.find({}).fetch())
+// Configs.remove("dtQ6MzzmmMC2DNGcZ")
+
+
+
+Meteor.publish('player-estimates', function publishTasks() {
+  return PlayerEstimates.find({})
+})
+
+Meteor.methods({
+  'insertTask': function ({ playerId, estimate}) {
+    return PlayerEstimates.insert({ playerId, estimate })
+  }
+})
+
 
 
 

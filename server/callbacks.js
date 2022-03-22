@@ -74,8 +74,8 @@ Empirica.onGameEnd((game) => {});
 // If you are not using these callbacks, comment them out so the system does
 // not call them for nothing.
 
-// // onSet is called when the experiment code call the .set() method
-// // on games, rounds, stages, players, playerRounds or playerStages.
+// onSet is called when the experiment code call the .set() method
+// on games, rounds, stages, players, playerRounds or playerStages.
 // Empirica.onSet((
 //   game,
 //   round,
@@ -87,10 +87,10 @@ Empirica.onGameEnd((game) => {});
 //   value, // New value
 //   prevValue // Previous value
 // ) => {
-//   // // Example filtering
-//   // if (key !== "value") {
-//   //   return;
-//   // }
+//   // Example filtering
+//   if (key !== "value") {
+//     return;
+//   }
 // });
 
 // // onAppend is called when the experiment code call the `.append()` method

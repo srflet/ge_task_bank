@@ -1,8 +1,12 @@
 import { magnitudesToEnglish } from "./conversions";
 import pluralize from "pluralize";
 
-export function getUnit({ round, answer, magnitude, preventPluralize }) {
-  const task = round.get("task");
+export function getUnit({ round=null, answer, magnitude, preventPluralize, player, task=null }) {
+  if (round) {
+    task = round.get("task");
+  } else {
+    task = task
+  }
 
   let unit = task.question.unit;
   if (!unit) {

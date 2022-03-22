@@ -36,7 +36,7 @@ export default class NumberToWords extends React.Component {
     if (isAltLayout) {
       return (
         <div className="text-dark-gray flex w-full py-2 ml-2 text-sm leading-none tabular-nums">
-          {res} <UnitSimple answer={answer} {...this.props} />
+          {res} <UnitSimple answer={answer} task={task} round={null} {...this.props} />
         </div>
       );
     }

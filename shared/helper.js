@@ -172,7 +172,12 @@ export function getNeighborPlayers(player, game) {
 
 export function getHints(player, round, game) {
   const { treatment } = game;
-  const task = round.get("task");
+  let task 
+  if (round) {
+    task = round.get("task")
+  } else {
+    task = player.get("task")
+  }
   const possibleHints = task.question.hints;
 
   if (!possibleHints || possibleHints.length === 0) {

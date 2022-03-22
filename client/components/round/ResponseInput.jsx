@@ -5,7 +5,6 @@ import Button from "../Button";
 import NumberToWords from "./NumberToWords";
 import Unit from "./Unit";
 
-import { TimeSync } from "meteor/mizzao:timesync";
 
 export default class ResponseInput extends React.Component {
   constructor(props) {
@@ -13,54 +12,17 @@ export default class ResponseInput extends React.Component {
 
     this.state = {
       answer:
-        props.player.stage.get("tmpanswer") ??
-        props.player.round.get("answer") ??
+        props.player.get("tmpanswer") ??
+        props.player.get("answer") ??
         "",
       focused: false,
-      disableUpdate: false,
     };
   }
 
-  componentDidMount() {
-    const {
-      stage,
-      game: {
-        treatment: { interactionMode },
-      },
-      isAltLayout = false,
-    } = this.props;
-
-    if (
-      isAltLayout &&
-      interactionMode === "continuous" &&
-      stage.name === "social"
-    ) {
-      this.setState({ disableUpdate: true });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.answer !== this.state.answer) {
-      const {
-        stage,
-        game: {
-          treatment: { interactionMode },
-        },
-        isAltLayout = false,
-      } = this.props;
-      if (
-        isAltLayout &&
-        interactionMode === "continuous" &&
-        stage.name === "social"
-      ) {
-        this.setState({ disableUpdate: false });
-      }
-    }
-  }
 
   handleChangeValue = (change) => {
     const { player } = this.props;
-    player.stage.set("tmpanswer", change.value);
+    player.set("tmpanswer", change.value);
     this.setState({ answer: change.value, err: "" });
   };
 
@@ -82,19 +44,6 @@ export default class ResponseInput extends React.Component {
     }
 
     return f
-  }
-
-  trackUpdate = (player, answer, isGivenDuringSocial) => {
-    if (answer === "") {
-      return;
-    }
-
-    const a = this.formatAnswer(answer)
-    const timeStamp = new Date(TimeSync.serverTime(null, 1000))
-
-    const updatedAnswers = player.round.get("updatedAnswers") ?? []
-    updatedAnswers.push({ id: player._id, answer: a, timeStamp, isGivenDuringSocial })
-    player.round.set("updatedAnswers", updatedAnswers)
   }
 
   handleSubmit = (event) => {

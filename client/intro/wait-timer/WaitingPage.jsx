@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
 import { Configs } from '../../../shared/api/collectionAdminGlobalConfigs'
+import { PlayerEstimates } from '../../../shared/api/PlayerEstimates'
 
 // Import components
 import IntroLayout from "../IntroLayout"
@@ -17,7 +18,8 @@ import moment from "moment";
 // Prepare the waiting page
 export default class WaitingPage extends Component {
     render() {
-        const { onNext, player } = this.props;
+        const { onNext, player, game } = this.props;
+
 
         return (
             <IntroLayout title="" {...this.props}>
@@ -64,14 +66,39 @@ class WaitingPageContent extends React.Component {
 
         // NOW HANDLE SOME RE-ROUTING IF NECESSARY
 
+
+
         // if game is timed out and player is ready, move on
         if (timeout & playerReady) {
-            onNext();
+            Tracker.autorun(function(){
+                Meteor.subscribe("player-estimates", function(){
+                  Meteor.call('insertTask', {
+                    playerId: player.id,
+                    estimate: player.get("answer")
+                  });
+                  console.log(PlayerEstimates.find({}).fetch())
+                });
+              });
+
+              console.log("line 83")
+            // onNext();
         }
 
         // if the db is ready there is no timeToStart config, move on
         if (!loading & timeToStart === undefined) {
-            onNext();
+            Tracker.autorun(function(){
+                Meteor.subscribe("player-estimates", function(){
+                  Meteor.call('insertTask', {
+                    playerId: player.id,
+                    estimate: player.get("answer")
+                  });
+
+                  console.log(PlayerEstimates.find({}).fetch())
+                });
+              });
+
+              console.log("line 100")
+            // onNext();
         }
     }
 
@@ -114,12 +141,35 @@ class WaitingPageContent extends React.Component {
 
         // if the db is ready and there is no timeToStart config, move on
         if (!loading & timeToStart === undefined) {
-            onNext();
+
+            Tracker.autorun(function(){
+                Meteor.subscribe("player-estimates", function(){
+                  Meteor.call('insertTask', {
+                    playerId: player.id,
+                    estimate: player.get("answer")
+                  });
+                  console.log(PlayerEstimates.find({}).fetch())
+                });
+              });
+
+              console.log("line 153")
+            // onNext();
         }
 
         // if game is counted down...
         if (timeout && playerReady) {
-            onNext()
+
+            Tracker.autorun(function(){
+                Meteor.subscribe("player-estimates", function(){
+                  Meteor.call('insertTask', {
+                    playerId: "test",
+                    estimate: "test"
+                  });
+                });
+              });
+
+              console.log("line 170")
+            // onNext()
         }
 
         // save  player buffer time if available
@@ -165,8 +215,9 @@ class WaitingPageContent extends React.Component {
     }
 
     render() {
-        const { loading, timeToStart, prolificCode } = this.props;
+        const { loading, timeToStart, prolificCode} = this.props;
         const { timeout, playerReady } = this.state
+
 
         return (
             <div className="bp3-non-ideal-state">
@@ -191,6 +242,7 @@ WaitingPageContentContainer = withTracker(rest => {
 
     // Get the props
     const { player, onNext } = rest
+    
 
     // Suscribe to collection information, and return nothing as long as it is loading
     const loading = !Meteor.subscribe("admin-global-configs").ready();
@@ -221,3 +273,4 @@ WaitingPageContentContainer = withTracker(rest => {
     };
 
 })(WaitingPageContent);
+
