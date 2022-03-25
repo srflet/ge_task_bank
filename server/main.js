@@ -1,5 +1,5 @@
 import Empirica from "meteor/empirica:core";
-import { Configs } from "../shared/api/collectionAdminGlobalConfigs.js";
+import { Configs } from "../shared/api/collectionGroupsManagement.js";
 import { PlayerEstimates } from "../shared/api/PlayerEstimates.js";
 import { avatarNames } from "../shared/avatars.js";
 import { getChatGroups, getNeighbors } from "../shared/helper";
@@ -7,14 +7,14 @@ import { instructions, taskData } from "../shared/tasks/default-tasks";
 import "./bots.js";
 import "./callbacks.js";
 
-Meteor.publish('admin-global-configs', function publishTasks() {
+Meteor.publish('group-management', function publishTasks() {
   return Configs.find({})
 })
 
-Configs.insert({ timeToStart: "17:19", maxBuffer: 0, loginRefresh: 60, prolificCode: "" })
+Configs.insert({time : { timeToStart: "16:05:19", maxBuffer: 0, loginRefresh: 60, prolificCode: "" }})
+
 console.log(Configs.find({}).fetch())
 // Configs.remove("dtQ6MzzmmMC2DNGcZ")
-
 
 
 Meteor.publish('player-estimates', function publishTasks() {

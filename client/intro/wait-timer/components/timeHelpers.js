@@ -1,22 +1,3 @@
-import moment from "moment-timezone";
-
-function getChicagoTimeZoneOffset() {
-
-    var jan = new moment.tz("2014-01-01 12:00", "America/Chicago");
-    var jul = new moment.tz("2014-06-01 12:00", "America/Chicago");
-
-    const stdTimezoneOffset = Math.max(jan.utcOffset(), jul.utcOffset());
-
-
-    const now = moment(new Date());
-    const todayInHometown = now.clone().tz("America/Chicago");
-
-
-    // if today's offset in NYC is smaller than the larger of the
-    // Standard/Daylight offset, then the current offset is the smaller option.
-    return todayInHometown.utcOffset() < stdTimezoneOffset ? todayInHometown.utcOffset() : stdTimezoneOffset;
-}
-
 export default function calcTimeRemaining(timeToStart, now, bufferTime) {
     if (!bufferTime) { bufferTime = 0 };
     const hour_minute = timeToStart.split(":");
@@ -32,13 +13,10 @@ export default function calcTimeRemaining(timeToStart, now, bufferTime) {
     const localOffset = d.getTimezoneOffset() * 60000;
 
 
-    //NYC IS OFFSET 4 HOURS DURING DAYLIGHT SAVINGS TIME
-    var chicagoOffset = getChicagoTimeZoneOffset() * 60000;
-
     // this could probably be more concise 
-    const chicagoDate = new Date(localTime + localOffset + chicagoOffset);
-    const targetDate = new Date(chicagoDate.getYear() + 1900, chicagoDate.getMonth(), chicagoDate.getDate(), targetHour, targetMinute, targetSecond)
-    const time_to_start = (targetDate.getTime() - chicagoDate.getTime()) / 1000;
+    const localDate = new Date(localTime + localOffset);
+    const targetDate = new Date(localDate.getYear() + 1900, localDate.getMonth(), localDate.getDate(), targetHour, targetMinute, targetSecond)
+    const time_to_start = (targetDate.getTime() - localDate.getTime()) / 1000;
 
     return (time_to_start + bufferTime);
 }

@@ -5,7 +5,7 @@ import Wrapper from "../../components/Wrapper";
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../../shared/api/collectionAdminGlobalConfigs'
+import { Configs } from '../../../shared/api/collectionGroupsManagement'
 
 // Handles all the timing stuff
 import { TimeSync } from "meteor/mizzao:timesync";
@@ -56,7 +56,7 @@ class WaitingConsentPage extends Component {
 WaitingConsentPageContents = withTracker(rest => {
 
     // Suscribe to collection information, and return nothing as long as it is loading
-    const loading = !Meteor.subscribe("admin-global-configs").ready();
+    const loading = !Meteor.subscribe("group-management").ready();
     if (loading) {
         return {
             loading

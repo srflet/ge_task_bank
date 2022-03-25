@@ -3,6 +3,7 @@ import NumberFormat from "react-number-format";
 // import { applyMagnitude } from "../../shared/conversions";
 import NumberToWords from "../../../components/round/NumberToWords";
 import { PlayerEstimates } from "../../../../shared/api/PlayerEstimates";
+import { Configs } from "../../../../shared/api/collectionGroupsManagement";
 
 import { TimeSync } from "meteor/mizzao:timesync";
 
@@ -16,7 +17,7 @@ export default class IntroResponseInput extends React.Component {
         props.player.get("answer") ??
         "",
       focused: false,
-      disableUpdate: false,
+      disableUpdate: props.player.get("answer") !== undefined,
     };
   }
 
@@ -74,17 +75,12 @@ export default class IntroResponseInput extends React.Component {
         console.log(PlayerEstimates.find({}).fetch())
       });
     });
+
+    this.setState({ disableUpdate: true });
+
     
+    return;
 
-    // const url = new URL(window.location.href);
-    // console.log(url.href)
-    // console.log(url.searchParams.get("playerIdKey"));
-
-
-
-  
-
-    onNext();
   };
 
   render() {
@@ -141,7 +137,17 @@ export default class IntroResponseInput extends React.Component {
             Submit
           </button>
         </div>
+
+        {
+        this.state.disableUpdate &&
+        <div>
+        <p>
+          Waiting for other players to submit their answer
+        </p>
+        </div>
+        }
       </form>
+
       );
     }
 }

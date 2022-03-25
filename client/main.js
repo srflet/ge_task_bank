@@ -12,9 +12,13 @@ import Instructions from "./intro/Instructions";
 import NewPlayerForm from "./intro/NewPlayerForm";
 import Quiz from "./intro/Quiz";
 import Username from "./intro/Username"
-import Layout from "./intro/Layout";
 import AttentionCheck from "./intro/AttentionCheck"
 import WaitingPage from "./intro/wait-timer/WaitingPage";
+import EstimatePage from "./intro/EstimatePage";
+import Layout from "./intro/Layout";
+import RedirectPage from "./intro/RedirectPage";
+import RedirectPage2 from "./intro/RedirectPage2";
+
 import WaitingConsent from "./intro/wait-timer/WaitingConsent";
 import WaitingThankYou from "./exit/WaitingThankYou";
 
@@ -30,18 +34,19 @@ if (!isDev) {
   // different instruction steps depending on the assigned treatment.
   Empirica.introSteps((game, treatment) => {
     if (treatment.stage === "first") {
-      const introSteps = [Instructions]
-    if (treatment.playerCount > 1) {
-      introSteps.push(Username)
-    }
-    introSteps.push(Layout)
-    introSteps.push(WaitingPage)
+      const introSteps = [EstimatePage]
+    // if (treatment.playerCount > 1) {
+    //   introSteps.push(Username)
+    // }
+    //introSteps.push(WaitingPage)
+    // introSteps.push(EstimatePage)
+    //introSteps.push(RedirectPage)
+    introSteps.push(RedirectPage2)
+    
 
     return introSteps
     }
-    
-    return [WaitingPage]
-    return
+
   })
 
 }

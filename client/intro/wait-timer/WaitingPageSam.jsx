@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 
 // Import the config from the db
-import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../../shared/api/collection'
+import { withTracker } from "meteor/react-meteor-data";
+import { Configs } from '../../../shared/api/collection';
 
 // Import components
-import IntroLayout from "../IntroLayout"
-import Countdown from './components/Countdown'
+import IntroLayout from "../IntroLayout";
+import Countdown from './components/Countdown';
+
+import CountdownTimer from './components/CountdownTimer';
 
 export default class WaitingPage extends Component {
     render() {
@@ -59,7 +61,7 @@ WaitingPageContentContainer = withTracker(rest => {
     const { player, onNext } = rest
 
     // Get collection information
-    const loading = !Meteor.subscribe("admin-global-configs").ready()
+    const loading = !Meteor.subscribe("group-management").ready()
     if (loading) {
         return {
             loading

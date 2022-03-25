@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../../shared/api/collectionAdminGlobalConfigs'
+import { Configs } from '../../../shared/api/collectionGroupsManagement'
 import { PlayerEstimates } from '../../../shared/api/PlayerEstimates'
 
 // Import components
@@ -70,35 +70,13 @@ class WaitingPageContent extends React.Component {
 
         // if game is timed out and player is ready, move on
         if (timeout & playerReady) {
-            Tracker.autorun(function(){
-                Meteor.subscribe("player-estimates", function(){
-                  Meteor.call('insertTask', {
-                    playerId: player.id,
-                    estimate: player.get("answer")
-                  });
-                  console.log(PlayerEstimates.find({}).fetch())
-                });
-              });
-
-              console.log("line 83")
-            // onNext();
+    
+            onNext();
         }
 
         // if the db is ready there is no timeToStart config, move on
         if (!loading & timeToStart === undefined) {
-            Tracker.autorun(function(){
-                Meteor.subscribe("player-estimates", function(){
-                  Meteor.call('insertTask', {
-                    playerId: player.id,
-                    estimate: player.get("answer")
-                  });
-
-                  console.log(PlayerEstimates.find({}).fetch())
-                });
-              });
-
-              console.log("line 100")
-            // onNext();
+            onNext();
         }
     }
 
@@ -142,42 +120,22 @@ class WaitingPageContent extends React.Component {
         // if the db is ready and there is no timeToStart config, move on
         if (!loading & timeToStart === undefined) {
 
-            Tracker.autorun(function(){
-                Meteor.subscribe("player-estimates", function(){
-                  Meteor.call('insertTask', {
-                    playerId: player.id,
-                    estimate: player.get("answer")
-                  });
-                  console.log(PlayerEstimates.find({}).fetch())
-                });
-              });
-
-              console.log("line 153")
-            // onNext();
+            onNext();
         }
 
         // if game is counted down...
         if (timeout && playerReady) {
 
-            Tracker.autorun(function(){
-                Meteor.subscribe("player-estimates", function(){
-                  Meteor.call('insertTask', {
-                    playerId: "test",
-                    estimate: "test"
-                  });
-                });
-              });
-
-              console.log("line 170")
-            // onNext()
+            player.set("timeToStart", Configs.find({}).fetch()[0].timeToStart)
+            onNext()
         }
 
         // save  player buffer time if available
-        if (bufferTime) {
-            if (!player.get("bufferTime")) {
-                player.set("bufferTime", bufferTime)
-            }
-        }
+        // if (bufferTime) {
+        //     if (!player.get("bufferTime")) {
+        //         player.set("bufferTime", bufferTime)
+        //     }
+        // }
     }
 
     renderLoading() {
@@ -237,6 +195,7 @@ class WaitingPageContent extends React.Component {
     }
 }
 
+var x
 
 WaitingPageContentContainer = withTracker(rest => {
 
@@ -245,7 +204,7 @@ WaitingPageContentContainer = withTracker(rest => {
     
 
     // Suscribe to collection information, and return nothing as long as it is loading
-    const loading = !Meteor.subscribe("admin-global-configs").ready();
+    const loading = !Meteor.subscribe("group-management").ready();
     if (loading) {
         return {
             loading
@@ -256,13 +215,16 @@ WaitingPageContentContainer = withTracker(rest => {
     const now = moment(TimeSync.serverTime(null, 1000));
 
     // Get the globalConfigs collection
-    const globalConfigs = Configs.find({}).fetch()[0];
+    const globalConfigs = Configs.find({}).fetch();
 
-    const timeToStart = globalConfigs.timeToStart
+    const timeToStart = globalConfigs[0].time.timeToStart;
+    
+    console.log(timeToStart);
+    
     // const timeToStart = "06:45"
-    const bufferTime = player.get("bufferTime") ? player.get("bufferTime") : _.random(globalConfigs.maxBuffer ?? 0)
-    const loginRefresh = globalConfigs.loginRefresh ?? 30
-    const prolificCode = globalConfigs.prolificCode
+    const bufferTime = player.get("bufferTime") ? player.get("bufferTime") : _.random(globalConfigs.maxBuffer ?? 0);
+    const loginRefresh = globalConfigs.loginRefresh ?? 60;
+    const prolificCode = globalConfigs.prolificCode;
 
     return {
         now,
