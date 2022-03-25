@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { withTracker } from "meteor/react-meteor-data"
 import { Configs } from '../../shared/api/collectionGroupsManagement'
 import { PlayerEstimates } from '../../shared/api/PlayerEstimates';
+import { findSet, makeArray } from './partitioner/partitionHelpers';
 
 
 // Import components
@@ -39,7 +40,7 @@ class RedirectPageContents extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { time: {}, seconds: 5 };
+        this.state = { time: {}, seconds: 2 };
         this.timer = 0;
         this.startTimer = this.startTimer.bind(this);
         this.countDown = this.countDown.bind(this);
@@ -73,7 +74,7 @@ class RedirectPageContents extends React.Component {
       }
     
       countDown(){
-          const { estimates } = this.props
+          const { estimates, player } = this.props
         // Remove one second, set state so a re-render happens.
         let seconds = this.state.seconds - 1;
         this.setState({
@@ -82,10 +83,57 @@ class RedirectPageContents extends React.Component {
         });
         
         // Check if we're at zero.
-        if (seconds == 0) { 
-          clearInterval(this.timer);
-          console.log(estimates)
+        if (seconds === 0) { 
+            clearInterval(this.timer);
+            console.log(estimates.length)
+
+            const groupSize = 10;
+
+            let estObjSlice = estimates.slice(1).slice(-128)
+            console.log(estObjSlice)
+            const totalN = estObjSlice.length
+            const extraN = estObjSlice.length % (2 * groupSize)
+            console.log(totalN - extraN)
+            console.log(estObjSlice.slice(0, totalN - extraN))
+
+            const est = estObjSlice.slice(0).sort((a, b) => a.estimate > b.estimate ? 1 : -1)
+            const useEst = est.slice(0, totalN - extraN)
+            const rejectEst = est.slice(1).slice(-extraN)
+            
+            console.log(rejectEst)
+            console.log(player.id)
+            console.log(rejectEst.filter(est => est.playerId === player.id))
+
+            if (rejectEst.filter(est => est.playerId === player.id).length > 0) {
+                console.log("you have been rejected")
+                return
+            }
+
+            
+            const starts = makeArray(useEst.length / (2 * groupSize), (i) => {
+            return (i * groupSize)
+            });
+
+            starts.map(i => findSet(useEst, i))
+
+
+            console.log(useEst)
+
+  
+            const playerGroupId = useEst.filter(est => est.playerId === player.id)[0].groupId
+            console.log("My group id: " + playerGroupId)
+
+            const queryParams = new URLSearchParams(window.location.search);
+            const playerIdKey = queryParams.get('playerIdKey');
+            const playerAnswer = player.get("answer");
+            const serverId = playerGroupId.slice(1).slice(-2)
+            const startUrl = "https://chatroom_server";
+            const endUrl = "meteorapp.com";
+            const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&playerAnswer=${playerAnswer}&playerGroupId=${playerGroupId}`
+            console.log(newUrl)
         }
+
+
       }
 
     renderLoading() {
