@@ -24,10 +24,22 @@ export default class Sorry extends React.Component {
         msg = "Unfortunately the Game was cancelled...";
         break;
     }
-    if (player.exitReason === "failedQuestion") {
-      msg =
+    switch (player.exitReason) {
+      case "failedQuestion":
+        msg =
         "Unfortunately you did not meet the conditions required to play the game.";
+        break;
+      case "rejectEstimate":
+        msg =
+        "Unfortunately all games are full, keep an eye out for future games.";
+        break;
     }
+    // if (player.exitReason === "failedQuestion") {
+    //   msg =
+    //     "Unfortunately you did not meet the conditions required to play the game.";
+    // }
+
+
     // Only for dev
     if (!game && Meteor.isDevelopment) {
       msg =

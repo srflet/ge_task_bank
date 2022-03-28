@@ -96,7 +96,7 @@ class EstimatePageContent extends React.Component {
         // if game is counted down...
         if (timeout && player.get("answer") !== undefined) {
 
-            onNext()
+            onNext();
         }
 
         // save  player buffer time if available

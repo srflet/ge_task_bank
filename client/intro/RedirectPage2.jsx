@@ -5,6 +5,7 @@ import { withTracker } from "meteor/react-meteor-data"
 import { Configs } from '../../shared/api/collectionGroupsManagement'
 import { PlayerEstimates } from '../../shared/api/PlayerEstimates';
 import { findSet, makeArray } from './partitioner/partitionHelpers';
+import { cyrb53 } from '../../shared/helperFunctions/hashing';
 
 
 // Import components
@@ -87,9 +88,9 @@ class RedirectPageContents extends React.Component {
             clearInterval(this.timer);
             console.log(estimates.length)
 
-            const groupSize = 10;
+            const groupSize = 20; // TODO: make group size flexible - generation of big/small arrays in partitionHelper.js need to handle 1:3 ratio. 
 
-            let estObjSlice = estimates.slice(1).slice(-128)
+            let estObjSlice = estimates.slice(0)
             console.log(estObjSlice)
             const totalN = estObjSlice.length
             const extraN = estObjSlice.length % (2 * groupSize)
@@ -106,6 +107,7 @@ class RedirectPageContents extends React.Component {
 
             if (rejectEst.filter(est => est.playerId === player.id).length > 0) {
                 console.log("you have been rejected")
+                player.exit("rejectEstimate")
                 return
             }
 
@@ -128,9 +130,11 @@ class RedirectPageContents extends React.Component {
             const playerAnswer = player.get("answer");
             const serverId = playerGroupId.slice(1).slice(-2)
             const startUrl = "https://chatroom_server";
-            const endUrl = "meteorapp.com";
-            const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&playerAnswer=${playerAnswer}&playerGroupId=${playerGroupId}`
+            const endUrl = ".meteorapp.com";
+            const newUrl = `${startUrl}${cyrb53(serverId)}${endUrl}/?playerIdKey=${playerIdKey}&playerAnswer=${playerAnswer}&playerGroupId=${cyrb53(playerGroupId)}`
             console.log(newUrl)
+
+            window.location.replace(newUrl)
         }
 
 
@@ -144,8 +148,9 @@ class RedirectPageContents extends React.Component {
     renderRedirectPage = () => {
         return (
           <div>
-              <button onClick={this.startTimer}>CLICK ME</button>
-            m: {this.state.time.m} s: {this.state.time.s}
+              <p>
+                  Please wait while we assign you a group. This may take up to 10 seconds....
+              </p>
           </div>
 
         )

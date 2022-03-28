@@ -16,6 +16,7 @@ export const num2stringdecimals = (num, decimals = 2) => {
 export const instructionsInfo = {
     pay: num2stringdecimals(1.60),
     bonus: num2stringdecimals(1.60),
+    extiPay: num2stringdecimals(0.50),
     isForecasting: false,
     time: 12,
 }

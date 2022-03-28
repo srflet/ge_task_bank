@@ -18,6 +18,7 @@ import EstimatePage from "./intro/EstimatePage";
 import Layout from "./intro/Layout";
 import RedirectPage from "./intro/RedirectPage";
 import RedirectPage2 from "./intro/RedirectPage2";
+import IntroExitPage from "./intro/IntroExitPage";
 
 import WaitingConsent from "./intro/wait-timer/WaitingConsent";
 import WaitingThankYou from "./exit/WaitingThankYou";
@@ -42,10 +43,13 @@ if (!isDev) {
     // introSteps.push(EstimatePage)
     //introSteps.push(RedirectPage)
     introSteps.push(RedirectPage2)
+    introSteps.push(IntroExitPage)
     
 
     return introSteps
     }
+
+    return
 
   })
 
