@@ -107,7 +107,7 @@ class RedirectPageContents extends React.Component {
 
             if (rejectEst.filter(est => est.playerId === player.id).length > 0) {
                 console.log("you have been rejected")
-                player.exit("rejectEstimate")
+                // player.exit("rejectEstimate")
                 return
             }
 
@@ -134,7 +134,7 @@ class RedirectPageContents extends React.Component {
             const newUrl = `${startUrl}${cyrb53(serverId)}${endUrl}/?playerIdKey=${playerIdKey}&playerAnswer=${playerAnswer}&playerGroupId=${cyrb53(playerGroupId)}`
             console.log(newUrl)
 
-            window.location.replace(newUrl)
+            // window.location.replace(newUrl)
         }
 
 
@@ -151,6 +151,8 @@ class RedirectPageContents extends React.Component {
               <p>
                   Please wait while we assign you a group. This may take up to 10 seconds....
               </p>
+
+              <div className="loader"></div>
           </div>
 
         )

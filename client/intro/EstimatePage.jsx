@@ -121,6 +121,12 @@ class EstimatePageContent extends React.Component {
         let tasks = taskData.slice();
         const task = tasks[taskId];
 
+        const no_answer = (timeout && player.get("answer") === undefined)
+
+        //TODO: include after testing
+        // if (no_answer) {
+        //     player.exit("noAnswer")
+        // }
 
         return (
             <>

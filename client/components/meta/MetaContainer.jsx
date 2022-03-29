@@ -28,7 +28,9 @@ export class MetaContainer extends Component {
             )}
           </>
         )}
-        <SummaryContainer {...this.props} isResponseStage={isResponseStage} />
+        {isResponseStage &&
+          <SummaryContainer {...this.props} isResponseStage={isResponseStage} />
+        }
       </div>
     );
   }

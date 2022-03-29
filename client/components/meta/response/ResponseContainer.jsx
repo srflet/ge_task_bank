@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NumberFormat from "react-number-format";
-import { getNeighborPlayers } from "../../../../shared/helper";
+import { getNeighborPlayers, getOtherPlayers } from "../../../../shared/helper";
+import { getNeighborNames } from "../../../../shared/helper";
 
 import { Avatar } from "../../../game/Avatar";
 import AutoRotate from "./AutoRotate";
@@ -36,33 +37,27 @@ export class ResponseContainer extends Component {
 
     const task = round.get("task");
     const { unit } = task.question;
-    const neighbors = getNeighborPlayers(player, game);
+    const players = getOtherPlayers(game.players, player)
+    const neighbors = players.filter(p => {
+      return p.get("playerGroupId")[0] === player.get("playerGroupId")[0]
+    })
+    console.log(neighbors)
     let answer = player.round.get("answer") ?? "N/A";
 
     return (
       <div className="response-container">
-        <div className="player-response">
-          <span className="text-dark-gray font-bold text-sm">
-            Your response
-          </span>
-          <div className="pt-2 pb-2 flex justify-between text-sm">
-            <Avatar iconOnly player={player} />
-
-            <span>
-              <Answer answer={answer} /> {getUnit({ round, answer, unit })}
-            </span>
-          </div>
-          {interactionMode === "continuous" && !player.stage.get("hasUpdatedOnce") && (
-            <span className="text-medium-gray text-sm leading-none">
-              Update your reponse on the lower right of the page.
-            </span>
-          )}
-        </div>
         <div className="other-responses">
           <span className="text-dark-gray font-bold text-sm mb-2">
             Other Players Detailed
           </span>
-          <AutoRotate otherPlayers={neighbors} unit={unit} rate={1000} {...this.props} />
+
+          {neighbors.map((p, i) => {
+            return (
+            <li className="flex justify-between text-sm" key={i}>
+            <Avatar player={p} />
+            </li>
+          );
+         })}
         </div>
       </div>
     );

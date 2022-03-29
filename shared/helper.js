@@ -170,6 +170,22 @@ export function getNeighborPlayers(player, game) {
   return neighbors;
 }
 
+export const getNeighborNames = (player, game) => {
+
+  const groupId = player.get("playerGroupId")
+  // Get the player that has this team
+  // Then get the initials for this player
+  let neighbors = game.players.filter(_player => {
+      return _player.get("playerGroupId") === groupId
+  }).filter(_player =>  {
+      return _player.get("id") !== player.get("id")
+  }).map(_player => {
+      return _player.get("id")
+  })
+
+  return neighbors;
+}
+
 export function getHints(player, round, game) {
   const { treatment } = game;
   let task 

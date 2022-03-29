@@ -19,6 +19,7 @@ import Layout from "./intro/Layout";
 import RedirectPage from "./intro/RedirectPage";
 import RedirectPage2 from "./intro/RedirectPage2";
 import IntroExitPage from "./intro/IntroExitPage";
+import Stage2IntroPage from "./game/Stage2IntroPage";
 
 import WaitingConsent from "./intro/wait-timer/WaitingConsent";
 import WaitingThankYou from "./exit/WaitingThankYou";
@@ -49,7 +50,7 @@ if (!isDev) {
     return introSteps
     }
 
-    return
+    return [Stage2IntroPage]
 
   })
 

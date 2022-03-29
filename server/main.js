@@ -56,8 +56,7 @@ Empirica.gameInit((game) => {
       networkStructure,
       interactionMode,
       chatGroups,
-      chat = false,
-      type="solo"
+      chat,
     },
   } = game;
 
@@ -102,7 +101,7 @@ Empirica.gameInit((game) => {
 
       if (chat) {
         check(!chatGroups, "chatGroups must be set when chat is used!");
-        p.set("chatGroups", getChatGroups(chatGroups, p));
+        p.set("chatGroups", p.get("playerGroupId"));
       }
     });
   }
@@ -134,80 +133,90 @@ Empirica.gameInit((game) => {
     tasks = _.shuffle(tasks);
   }
 
-  // Round/Stage info
-  check(
-    playerCount > 1 && interactionMode === "continuous" && nInteractions > 0,
-    "Continuous interaction mode with multiplayer cannot have nInteractions more than 0 "
-  );
+  const round = game.addRound();
+  const task = tasks[1];
+  task.instructions = instructions[task.task];
+  round.set("task", task);
+  round.set("index", 1);
 
-  _.times(nRounds, (i) => {
-    const round = game.addRound();
-    const task = tasks[i];
-    task.instructions = instructions[task.task];
-    round.set("task", task);
-    round.set("index", i);
-
-    // If we have more interactions than 0, more than 1 player, and discreet interactions...
-    if (
-      nInteractions > 0 &&
-      playerCount > 1 &&
-      interactionMode === "discreet"
-    ) {
-      // ...create a response and social stage for every interaction
-      for (let i = 0; i < nInteractions; i++) {
-        round.addStage({
-          name: "response",
-          displayName: "Response",
-          durationInSeconds: isDebugTime ? 31540000 : responseDuration,
-        });
-
-        round.addStage({
-          name: "social",
-          displayName: "Social",
-          durationInSeconds: isDebugTime ? 31540000 : socialDuration,
-        });
-      }
-
-      // And add a final response stage for after the last social interaction
-      round.addStage({
-        name: "response",
-        displayName: "Response",
-        durationInSeconds: Time ? 31540000 : responseDuration,
-      });
-    } else {
-      //...otherwise, just create one response stage...
-      round.addStage({
-        name: "response",
-        displayName: "Response",
-        durationInSeconds: isDebugTime ? 31540000 : responseDuration,
-      });
-
-      //...and create one social stage if this is a continuous interaction mode
-      if (interactionMode === "continuous" && playerCount > 1 && type === "social") {
-        round.addStage({
-          name: "social",
-          displayName: "Social",
-          durationInSeconds: isDebugTime ? 31540000 : socialDuration,
-        });
-      }
-    }
-
-    if (feedback) {
-      round.addStage({
-        name: "feedback",
-        displayName: "Feedback",
-        durationInSeconds: isDebugTime ? 31540000 : feedbackDuration,
-      });
-    }
-
-    if (longTermEngagement && i + 1 < nRounds) {
-      round.addStage({
-        name: "wait",
-        displayName: "Wait",
-        durationInSeconds: 31540000, // 1 year
-      });
-    }
+  round.addStage({
+    name: "social",
+    displayName: "Social",
+    durationInSeconds: isDebugTime ? 31540000 : 600000000,
   });
+
+  round.addStage({
+    name: "response",
+    displayName: "Response",
+    durationInSeconds: isDebugTime ? 31540000 : responseDuration,
+  });
+
+
+
+  // _.times(nRounds, (i) => {
+
+
+  //   // If we have more interactions than 0, more than 1 player, and discreet interactions...
+  //   if (
+  //     nInteractions > 0 &&
+  //     playerCount > 1 &&
+  //     interactionMode === "discreet"
+  //   ) {
+  //     // ...create a response and social stage for every interaction
+  //     for (let i = 0; i < nInteractions; i++) {
+  //       round.addStage({
+  //         name: "response",
+  //         displayName: "Response",
+  //         durationInSeconds: isDebugTime ? 31540000 : responseDuration,
+  //       });
+
+  //       round.addStage({
+  //         name: "social",
+  //         displayName: "Social",
+  //         durationInSeconds: isDebugTime ? 31540000 : socialDuration,
+  //       });
+  //     }
+
+  //     // And add a final response stage for after the last social interaction
+  //     round.addStage({
+  //       name: "response",
+  //       displayName: "Response",
+  //       durationInSeconds: Time ? 31540000 : responseDuration,
+  //     });
+  //   } else {
+  //     //...otherwise, just create one response stage...
+  //     round.addStage({
+  //       name: "response",
+  //       displayName: "Response",
+  //       durationInSeconds: isDebugTime ? 31540000 : responseDuration,
+  //     });
+
+  //     //...and create one social stage if this is a continuous interaction mode
+  //     if (interactionMode === "continuous" && playerCount > 1) {  //interactionMode === "continuous" && playerCount > 1 && type === "social"
+  //       round.addStage({
+  //         name: "social",
+  //         displayName: "Social",
+  //         durationInSeconds: isDebugTime ? 31540000 : socialDuration,
+  //       });
+  //     }
+  //   }
+
+  //   if (feedback) {
+  //     round.addStage({
+  //       name: "feedback",
+  //       displayName: "Feedback",
+  //       durationInSeconds: isDebugTime ? 31540000 : feedbackDuration,
+  //     });
+  //   }
+
+  //   if (longTermEngagement && i + 1 < nRounds) {
+  //     round.addStage({
+  //       name: "wait",
+  //       displayName: "Wait",
+  //       durationInSeconds: 31540000, // 1 year
+  //     });
+  //   }
+  // });
 });
 
 function check(condition, message, shouldThrow = true) {

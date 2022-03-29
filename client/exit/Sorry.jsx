@@ -33,6 +33,10 @@ export default class Sorry extends React.Component {
         msg =
         "Unfortunately all games are full, keep an eye out for future games.";
         break;
+        case "noAnswer":
+          msg =
+          "Unfortunately you did not submit an answer in time, keep an eye out for future games.";
+          break;
     }
     // if (player.exitReason === "failedQuestion") {
     //   msg =
