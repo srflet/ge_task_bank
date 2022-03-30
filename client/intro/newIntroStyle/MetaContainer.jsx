@@ -5,7 +5,7 @@ export class MetaContainer extends Component {
   render() {
       const { task } = this.props;
     return (
-      <div className="meta-container without-chat response-stage">
+      <div className="meta-container without-chat">
         <SummaryContainer task={task} {...this.props} />
       </div>
     );

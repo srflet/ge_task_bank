@@ -25,7 +25,7 @@ export default class NewLayout extends React.Component {
 
 
     return (
-      <NewLayoutContentContainer onNext={onNext} player={player} /> 
+        <NewLayoutContentContainer onNext={onNext} player={player} /> 
     )
 }
 }

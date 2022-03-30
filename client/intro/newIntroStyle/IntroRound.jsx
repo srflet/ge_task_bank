@@ -1,17 +1,14 @@
 import React from "react";
 import NewLayout from "./NewLayout";
+import { Provider } from "../../context";
 
 
 export default class IntroRound extends React.Component {
   render() {
     return (
-
-    <div className="h-full text-base main-container">
-        <>
+        <Provider triggerModal={false}>
             <NewLayout {...this.props} />
-        </>
-        
-    </div>
+        </Provider>
 
     );
   }
