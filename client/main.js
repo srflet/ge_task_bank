@@ -15,11 +15,14 @@ import Username from "./intro/Username"
 import AttentionCheck from "./intro/AttentionCheck"
 import WaitingPage from "./intro/wait-timer/WaitingPage";
 import EstimatePage from "./intro/EstimatePage";
+import EstimatePageBackup from "./intro/estimate_backup";
 import Layout from "./intro/Layout";
 import RedirectPage from "./intro/RedirectPage";
 import RedirectPage2 from "./intro/RedirectPage2";
 import IntroExitPage from "./intro/IntroExitPage";
 import Stage2IntroPage from "./game/Stage2IntroPage";
+import IntroLayout from "./intro/IntroLayout";
+import IntroRound from "./intro/newIntroStyle/IntroRound";
 
 import WaitingConsent from "./intro/wait-timer/WaitingConsent";
 import WaitingThankYou from "./exit/WaitingThankYou";
@@ -36,15 +39,15 @@ if (!isDev) {
   // different instruction steps depending on the assigned treatment.
   Empirica.introSteps((game, treatment) => {
     if (treatment.stage === "first") {
-      const introSteps = [EstimatePage]
+      const introSteps = [IntroRound]
     // if (treatment.playerCount > 1) {
     //   introSteps.push(Username)
     // }
     //introSteps.push(WaitingPage)
-    // introSteps.push(EstimatePage)
+    // introSteps.push(EstimatePageBackup)
     //introSteps.push(RedirectPage)
-    introSteps.push(RedirectPage2)
-    introSteps.push(IntroExitPage)
+    // introSteps.push(RedirectPage2)
+    // introSteps.push(IntroExitPage)
     
 
     return introSteps
@@ -57,12 +60,17 @@ if (!isDev) {
 }
 
 const Lobby = ({ player, gameLobby }) => (
-  <header className="lobby">
-    <h1>Please wait until the game is ready...</h1>
-    <p>
-      This may take up to 1 minute.
-    </p>
-  </header>
+
+        <div>
+          <IntroLayout title="">
+          <p>
+              Please wait while we assign you a group. This may take up to 30 seconds....
+          </p>
+
+          <div className="loader"></div>
+          </IntroLayout>
+        </div>
+
 );
 Empirica.lobby(Lobby);
 

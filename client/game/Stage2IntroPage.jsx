@@ -5,7 +5,9 @@ export default class Stage2IntroPage extends React.Component{
         const { player, onNext } = this.props;
         const queryParams = new URLSearchParams(window.location.search);
         const playerGroupId = queryParams.get("playerGroupId");
-        player.set("playerGroupId", [playerGroupId])
+        const playerMID = queryParams.get("MID");
+        player.set("playerGroupId", [playerGroupId]);
+        player.set("MID", playerMID);
         onNext();
         return null
     }

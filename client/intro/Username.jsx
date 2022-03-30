@@ -5,7 +5,16 @@ import IntroLayout from './IntroLayout'
 
 export default class Username extends Component {
     state = {
-        username: ""
+        username: "",
+        MID: ""
+    }
+
+    componentDidMount() {
+        const params = new URLSearchParams(window.location.search);
+        const MID = params.get("MID");
+        
+        this.setState({["MID"]: MID})
+
     }
 
     handleChange = e => {
@@ -16,9 +25,10 @@ export default class Username extends Component {
         e.preventDefault()
 
         const { player, onNext } = this.props
-        const { username } = this.state
+        const { username, MID } = this.state
 
         player.set("username", username)
+        player.set("MID", MID)
         onNext()
     }
 
@@ -30,12 +40,13 @@ export default class Username extends Component {
             hasNext,
         } = this.props
 
-        const { username } = this.state
+        const { username, MID } = this.state
 
         return (
             <IntroLayout title="Username" {...this.props}>
                 <div>
-                    <p>Please enter a username to identify yourself to other players:</p>
+                    <p>Your Worker ID: <strong>{MID}</strong></p>
+                    <p>Please enter a username to be displayed in the chatroom with other participants:</p>
                     <form onSubmit={this.handleSubmit}>
                         <Input
                             name="username"

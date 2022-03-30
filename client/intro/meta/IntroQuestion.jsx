@@ -3,7 +3,7 @@ import { getHints } from "../../../shared/helper";
 
 export class IntroQuestion extends Component {
   render() {
-    const { player, game, task } = this.props;
+    const { task } = this.props;
     const { question } = task;
     const { text: qText, description: qDesc, image } = question;
     const classContainer = ["question-container"];
@@ -37,7 +37,7 @@ export class IntroQuestion extends Component {
                 )}
               </div>
               <div className="w-full ln-27">
-                <strong>Submit your response below to the right.</strong>
+                <strong>Submit your response below.</strong>
               </div>
             </div>
           </div>

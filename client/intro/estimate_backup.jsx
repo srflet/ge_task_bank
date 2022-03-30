@@ -19,7 +19,7 @@ import calcTimeRemaining from './wait-timer/components/timeHelpers';
 import moment from "moment";
 
 // Prepare the Estimate page
-export default class EstimatePage extends Component {
+export default class EstimatePageBackup extends Component {
     render() {
         const { onNext, player, game } = this.props;
 
@@ -129,18 +129,16 @@ class EstimatePageContent extends React.Component {
         // }
 
         return (
-            <div className="h-full text-base main-container">
-                <div className="h-16 grid grid-cols-3 items-center px-6">
+            <>
+                <div className="game-start-timer">
                     Time to answer: <CountdownTimer timeToStart={calcTimeRemaining(timeToStart, now, bufferTime)} handleTimeOut={this.handleTimeOut} />
                 </div>
 
                 <div className="h-full text-base alt-main-container">
-                    <IntroQuestion {...this.props} task={task} />
-                    <div className="meta-container without-chat response-stage">
-                        <PlayerResponse {...this.props} task={task}/>
-                    </div>
+                <IntroQuestion {...this.props} task={task} />
+                <PlayerResponse {...this.props} task={task}/>
                 </div>
-            </div>
+            </>
         )
 
     }
@@ -151,9 +149,12 @@ class EstimatePageContent extends React.Component {
 
 
         return (
-                <div>
+            <div className="bp3-non-ideal-state">
+                <div className="bp3-non-ideal-state-description">
                     {loading ? this.renderLoading() : this.renderEstimatePage()}
                 </div>
+
+            </div>
         );
     }
 }

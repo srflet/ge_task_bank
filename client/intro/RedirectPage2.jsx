@@ -75,7 +75,7 @@ class RedirectPageContents extends React.Component {
       }
     
       countDown(){
-          const { estimates, player } = this.props
+          const { estimates, player, onNext } = this.props
         // Remove one second, set state so a re-render happens.
         let seconds = this.state.seconds - 1;
         this.setState({
@@ -127,14 +127,16 @@ class RedirectPageContents extends React.Component {
 
             const queryParams = new URLSearchParams(window.location.search);
             const playerIdKey = queryParams.get('playerIdKey');
-            const playerAnswer = player.get("answer");
+            const MID =  queryParams.get('MID');
+            const username =  player.get("username")
             const serverId = playerGroupId.slice(1).slice(-2)
+            console.log(serverId)
             const startUrl = "https://chatroom_server";
             const endUrl = ".meteorapp.com";
-            const newUrl = `${startUrl}${cyrb53(serverId)}${endUrl}/?playerIdKey=${playerIdKey}&playerAnswer=${playerAnswer}&playerGroupId=${cyrb53(playerGroupId)}`
+            const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
             console.log(newUrl)
-
-            // window.location.replace(newUrl)
+            
+            window.location.replace(newUrl)
         }
 
 
@@ -149,7 +151,7 @@ class RedirectPageContents extends React.Component {
         return (
           <div>
               <p>
-                  Please wait while we assign you a group. This may take up to 10 seconds....
+                  Please wait while we assign you a group. This may take up to 30 seconds....
               </p>
 
               <div className="loader"></div>
