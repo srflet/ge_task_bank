@@ -39,13 +39,13 @@ if (!isDev) {
   // different instruction steps depending on the assigned treatment.
   Empirica.introSteps((game, treatment) => {
     if (treatment.stage === "first") {
-      const introSteps = [IntroRound]
+      const introSteps = [Username]
     // if (treatment.playerCount > 1) {
     //   introSteps.push(Username)
     // }
     //introSteps.push(WaitingPage)
-    // introSteps.push(EstimatePageBackup)
-    //introSteps.push(RedirectPage)
+    introSteps.push(IntroRound)
+    introSteps.push(RedirectPage2)
     // introSteps.push(RedirectPage2)
     // introSteps.push(IntroExitPage)
     

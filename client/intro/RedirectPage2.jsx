@@ -129,9 +129,9 @@ class RedirectPageContents extends React.Component {
             const playerIdKey = queryParams.get('playerIdKey');
             const MID =  queryParams.get('MID');
             const username =  player.get("username")
-            const serverId = playerGroupId.slice(1).slice(-2)
+            const serverId = playerGroupId.split("_")[1]
             console.log(serverId)
-            const startUrl = "https://chatroom_server";
+            const startUrl = "https://chatroom-server-";
             const endUrl = ".meteorapp.com";
             const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
             console.log(newUrl)

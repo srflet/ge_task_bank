@@ -24,6 +24,17 @@
   overflow: hidden;
 }
 
+.alt-main-container-seth {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(50%, 1fr);
+  grid-template-areas:
+    "question-container"
+    "meta-container";
+  overflow: visible;
+}
+
+
 .question-container {
   height: auto;
   display: flex;
@@ -82,4 +93,8 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.seth {
+  height: 20rem;
 }

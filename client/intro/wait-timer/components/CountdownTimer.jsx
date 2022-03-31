@@ -25,12 +25,17 @@ export default class CountdownTimer extends React.Component {
 
     render() {
         const { timeToStart } = this.props;
-
-
+        const classes = ["flex flex-col items-center justify-center"];
+        let labelClassName = "text-xs font-bold text-dark-grey";
+        let timerClassName = "text-18 font-bold text-dark-grey";
+  
         return (
-            <>
-                { this.renderTimerDisplay(timeToStart)}
-            </>
+            <div className={classes.join(" ")}>
+            <div className={labelClassName}>Timer</div>
+            <span className={timerClassName}>
+            { this.renderTimerDisplay(timeToStart)}
+            </span>
+            </div>
         )
     }
 }

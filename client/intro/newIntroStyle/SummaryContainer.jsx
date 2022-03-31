@@ -8,7 +8,7 @@ export class SummaryContainer extends Component {
   }
   render() {
     return (
-      <div className="summary-container">
+      <div className="h-full content-center px-2 py-3 bg-grey w-1/2">
         {this.renderAnswer()}
       </div>
     );

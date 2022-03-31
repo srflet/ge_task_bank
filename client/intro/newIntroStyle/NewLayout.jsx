@@ -18,6 +18,8 @@ import { TimeSync } from "meteor/mizzao:timesync";
 import calcTimeRemaining from '../wait-timer/components/timeHelpers';
 import moment from "moment";
 import MetaContainer from "./MetaContainer";
+import { Header } from './Header';
+import SummaryContainer from './SummaryContainer';
 
 export default class NewLayout extends React.Component {
   render() {
@@ -126,16 +128,18 @@ class NewLayoutContent extends React.Component {
       // }
 
       return (
-          <>
-              <div className="h-16 grid grid-cols-3 items-center px-6">
-                  Time to answer: <CountdownTimer timeToStart={calcTimeRemaining(timeToStart, now, bufferTime)} handleTimeOut={this.handleTimeOut} />
+            <div className="h-full text-base alt-main-container-seth">
+              <div className="h-16 items-center px-6 py-6 bg-white">
+              <CountdownTimer timeToStart={calcTimeRemaining(timeToStart, now, bufferTime)} handleTimeOut={this.handleTimeOut} />
               </div>
 
-              <div className="h-full text-base alt-main-container">
+              {/* <Header isAltLayout={true} timeToStart={calcTimeRemaining(timeToStart, now, bufferTime)} {...this.props} /> */}
+
+
+              
                   <IntroQuestion {...this.props} task={task} />
                   <MetaContainer {...this.props} task={task}/>
               </div>
-            </>
       )
 
   }

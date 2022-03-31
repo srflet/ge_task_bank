@@ -110,31 +110,31 @@ Empirica.gameInit((game) => {
 
   let tasks = taskData.slice();
 
-  if (taskType) {
-    const t = Object.fromEntries(taskType.split(",").map((i) => [i, true]));
-    tasks = tasks.filter((task) => t[task.task]);
-  }
+  // if (taskType) {
+  //   const t = Object.fromEntries(taskType.split(",").map((i) => [i, true]));
+  //   tasks = tasks.filter((task) => t[task.task]);
+  // }
 
-  check(
-    tasks.length === 0,
-    `Task list is empty! Is the taskList correct?
-  It should be a comma-separated list of task types, like so: 
+  // check(
+  //   tasks.length === 0,
+  //   `Task list is empty! Is the taskList correct?
+  // It should be a comma-separated list of task types, like so: 
   
-    daily_life_facts,population_of_large_cities,geopolitics`
-  );
+  //   daily_life_facts,population_of_large_cities,geopolitics`
+  // );
 
-  if (tasks.length < nRounds) {
-    nRounds = tasks.length;
-    game.treatment.nRounds = tasks.length;
-    console.log("Fewer tasks than nRounds. Setting nRounds to tasks.length.");
-  }
+  // if (tasks.length < nRounds) {
+  //   nRounds = tasks.length;
+  //   game.treatment.nRounds = tasks.length;
+  //   console.log("Fewer tasks than nRounds. Setting nRounds to tasks.length.");
+  // }
 
-  if (randomizeTask) {
-    tasks = _.shuffle(tasks);
-  }
+  // if (randomizeTask) {
+  //   tasks = _.shuffle(tasks);
+  // }
 
   const round = game.addRound();
-  const task = tasks[1];
+  const task = tasks[14];
   task.instructions = instructions[task.task];
   round.set("task", task);
   round.set("index", 1);
@@ -142,13 +142,13 @@ Empirica.gameInit((game) => {
   round.addStage({
     name: "social",
     displayName: "Social",
-    durationInSeconds: isDebugTime ? 31540000 : 600000000,
+    durationInSeconds: isDebugTime ? 31540000 : 60,
   });
 
   round.addStage({
     name: "response",
     displayName: "Response",
-    durationInSeconds: isDebugTime ? 31540000 : responseDuration,
+    durationInSeconds: isDebugTime ? 31540000 : 60000000,
   });
 
 
