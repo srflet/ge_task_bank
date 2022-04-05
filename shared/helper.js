@@ -47,7 +47,7 @@ export function getSocialInfoValue(type, neighbors, task) {
 
   const values = neighbors
     .map((p) => {
-      const answer = p.round.get("answer");
+      const answer = p.get("firstAnswer");
 
       if (answer === undefined) {
         return null;

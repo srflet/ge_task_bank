@@ -31,7 +31,9 @@ export function Avatar({ player, bordered, iconOnly, isAltLayout }) {
             __html: avatar.svg,
           }}
         ></div>
-        {iconOnly ? "" : <div className="ml-3 text-gray-500">{player.id}</div>}
+        <div className="ml-3 text-gray-500">
+        {iconOnly ? "" : player.id} {socialExposure ? player.get("firstAnswer") : ""}
+        </div>
       </div>
     </div>
   );

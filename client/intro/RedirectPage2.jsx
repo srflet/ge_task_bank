@@ -41,7 +41,7 @@ class RedirectPageContents extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { time: {}, seconds: 2 };
+        this.state = { time: {}, seconds: 10 };
         this.timer = 0;
         this.startTimer = this.startTimer.bind(this);
         this.countDown = this.countDown.bind(this);
@@ -98,16 +98,17 @@ class RedirectPageContents extends React.Component {
             console.log(estObjSlice.slice(0, totalN - extraN))
 
             const est = estObjSlice.slice(0).sort((a, b) => a.estimate > b.estimate ? 1 : -1)
-            const useEst = est.slice(0, totalN - extraN)
-            const rejectEst = est.slice(1).slice(-extraN)
-            
-            console.log(rejectEst)
-            console.log(player.id)
-            console.log(rejectEst.filter(est => est.playerId === player.id))
+            let useEst = est
 
-            if (rejectEst.filter(est => est.playerId === player.id).length > 0) {
+            if (est.length % (2 * groupSize)) {
+                useEst = est.slice(0, totalN - extraN)
+            }
+            
+            console.log(player.id)
+
+            if (useEst.filter(est => est.playerId === player.id).length === 0) {
                 console.log("you have been rejected")
-                // player.exit("rejectEstimate")
+                player.exit("rejectEstimate")
                 return
             }
 
@@ -130,10 +131,11 @@ class RedirectPageContents extends React.Component {
             const MID =  queryParams.get('MID');
             const username =  player.get("username")
             const serverId = playerGroupId.split("_")[1]
+            const playerAnswer = player.get("answer")
             console.log(serverId)
             const startUrl = "https://chatroom-server-";
             const endUrl = ".meteorapp.com";
-            const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
+            const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&payerAnswer=${playerAnswer}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
             console.log(newUrl)
             
             window.location.replace(newUrl)

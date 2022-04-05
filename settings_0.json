@@ -1,0 +1,27 @@
+{
+	"galaxy.meteor.com": {
+        "env": {
+            "MONGO_URL":"mongodb+srv://seth:22nixsoaontzRO3H@empirica-production-bxpfk.mongodb.net/chat_server_0?retryWrites=true&w=majority",
+			"MONGO_OPLOG_URL":"mongodb+srv://meteor_oplog:oplogdataftw@empirica-production-bxpfk.mongodb.net/local"
+    }
+  }, 
+  "public": {
+    "playerIdParam": "playerId",
+    "playerIdParamExclusive": false,
+    "debug_newPlayer": false,
+    "debug_resetSession": false,
+    "debug_resetDatabase": false,
+    "debug_gameDebugMode": false,
+    "loglevel": "info"
+  },
+  "admins": [
+    {
+      "username": "joshua",
+      "password": "nedylab"
+    },
+		{
+      "username": "seth",
+      "password": "greenbay2010"
+    }
+  ]
+}

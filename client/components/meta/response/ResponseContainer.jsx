@@ -43,6 +43,7 @@ export class ResponseContainer extends Component {
     })
     console.log(neighbors)
     let answer = player.round.get("answer") ?? "N/A";
+    let socialExposure = false
 
     return (
       <div className="response-container">
@@ -54,7 +55,7 @@ export class ResponseContainer extends Component {
           {neighbors.map((p, i) => {
             return (
             <li className="flex justify-between text-sm" key={i}>
-            <Avatar player={p} />
+            <Avatar socialExposure={socialExposure} player={p} />
             </li>
           );
          })}
