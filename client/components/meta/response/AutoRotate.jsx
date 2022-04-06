@@ -79,9 +79,9 @@ export default class AutoRotate extends Component {
   }
 
   render() {
-    const { unit, otherPlayers, round } = this.props
+    const { unit, otherPlayers, round, game } = this.props
     const { playerOrder } = this.state
-
+    const showChat = game.treatment.chat
     return (
       <div
         className="overflow-y-auto p-1"
@@ -93,14 +93,16 @@ export default class AutoRotate extends Component {
           {playerOrder.map((p_id, i) => {
 
             const p = otherPlayers.filter(_player => _player._id === p_id)[0]
-            let oAnswer = p.round.get("answer") ?? "N/A";
+            let oAnswer = p.get("firstAnswer") ?? "N/A";
 
             return (
               <li className="flex justify-between text-sm" key={i}>
-                <Avatar iconOnly player={p} />
+                <Avatar player={p} />
+                {!showChat &&
                 <span>
                   <Answer answer={oAnswer} /> {getUnit({ round, oAnswer, unit })}
                 </span>
+                }
               </li>
             );
           })}

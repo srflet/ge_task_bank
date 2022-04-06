@@ -2,6 +2,7 @@ import React from "react";
 import NumberFormat from "react-number-format";
 // import { applyMagnitude } from "../../shared/conversions";
 import NumberToWords from "../../components/round/NumberToWords";
+import { GameData } from "../../../shared/api/collectionGroupsManagement";
 import { PlayerEstimates } from "../../../shared/api/PlayerEstimates";
 
 export default class IntroResponseInput extends React.Component {
@@ -64,16 +65,21 @@ export default class IntroResponseInput extends React.Component {
     player.set("answer", a);
 
     Tracker.autorun(function(){
-      Meteor.subscribe("player-estimates", function(){
+      Meteor.subscribe("group-management", function(){
         Meteor.call('insertTask', {
           playerId: player.id,
           estimate: player.get("answer")
         });
-        console.log(PlayerEstimates.find({}).fetch())
+        console.log(GameData.find({ "estimate": { $exists: true, $ne: null } }).fetch())
       });
     });
 
     this.setState({ disableUpdate: true });
+
+    Meteor.call('saveEstimate', {
+      playerId: player.id,
+      estimate: player.get("answer")
+    });
 
     
     return;

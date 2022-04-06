@@ -1,32 +1,59 @@
 import Empirica from "meteor/empirica:core";
-import { Configs } from "../shared/api/collectionGroupsManagement.js";
-import { PlayerEstimates } from "../shared/api/PlayerEstimates.js";
+import { GameData } from "../shared/api/collectionGroupsManagement.js";
 import { avatarNames } from "../shared/avatars.js";
 import { getChatGroups, getNeighbors } from "../shared/helper";
 import { instructions, taskData } from "../shared/tasks/default-tasks";
+import { MONGO_URL } from "../credentials.js";
 import "./bots.js";
 import "./callbacks.js";
 
 Meteor.publish('group-management', function publishTasks() {
-  return Configs.find({})
-})
+  return GameData.find({})
+});
 
-Configs.insert({time : { timeToStart: "16:05:19", maxBuffer: 0, loginRefresh: 60, prolificCode: "" }})
+if (GameData.find({ "time": { $exists: true, $ne: null } }).fetch().length === 0) {
+  GameData.insert({time : { timeToStart: "21:00:00", maxBuffer: 0, loginRefresh: 60, prolificCode: "TEST2" }})
+};
 
-console.log(Configs.find({}).fetch())
-// Configs.remove("dtQ6MzzmmMC2DNGcZ")
+if (GameData.find({ "redirectTimer": { $exists: true, $ne: null } }).fetch().length === 0) {
+  GameData.insert({ "redirectTimer": {maxBuffer: 15, Code: "TESTTimerInsert3"}})
+};
+
+// console.log(GameData.find({}).fetch());
+
+const timeData = GameData.find({ "redirectTimer": { $exists: true, $ne: null } }).fetch();
+console.log(timeData)
+    
+const redirectBuffer = timeData[0].redirectTimer.maxBuffer;
+    
+console.log(redirectBuffer)
+// GameData.remove("dtQ6MzzmmMC2DNGcZ")
 
 
-Meteor.publish('player-estimates', function publishTasks() {
-  return PlayerEstimates.find({})
-})
+var database = new MongoInternals.RemoteCollectionDriver(MONGO_URL);
+const PlayerEstimates = new Mongo.Collection("player-estiamtes", { _driver: database });
+
+
 
 Meteor.methods({
   'insertTask': function ({ playerId, estimate}) {
+    return GameData.insert({ playerId, estimate })
+  }
+});
+
+
+Meteor.methods({
+  'saveEstimate': function ({ playerId, estimate}) {
     return PlayerEstimates.insert({ playerId, estimate })
   }
-})
+});
 
+
+Meteor.methods({
+  'getEstimates': function () {
+    return PlayerEstimates.find({}).fetch()
+  }
+});
 
 
 
@@ -142,13 +169,13 @@ Empirica.gameInit((game) => {
   round.addStage({
     name: "social",
     displayName: "Social",
-    durationInSeconds: isDebugTime ? 31540000 : 60,
+    durationInSeconds: isDebugTime ? 31540000 : socialDuration,
   });
 
   round.addStage({
     name: "response",
     displayName: "Response",
-    durationInSeconds: isDebugTime ? 31540000 : 60000000,
+    durationInSeconds: isDebugTime ? 31540000 : responseDuration,
   });
 
 

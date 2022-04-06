@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
 
-import { Configs } from '../../../shared/api/collectionGroupsManagement';
+import { GameData } from '../../../shared/api/collectionGroupsManagement';
 
 
 // Import components
@@ -108,7 +108,12 @@ class NewLayoutContent extends React.Component {
 
   renderLoading() {
       return (<center>Loading...</center>);
-  }
+    }
+
+  renderGameFull() {
+      return (<center>Game is full...</center>);
+
+    }
 
 
   renderEstimatePage = () => {
@@ -145,13 +150,19 @@ class NewLayoutContent extends React.Component {
   }
 
   render() {
-      const { loading, timeToStart, prolificCode} = this.props;
+      const { loading, timeToStart, prolificCode, playerEstimates, player} = this.props;
       const { timeout, playerReady } = this.state
+
+      const loading2 = playerEstimates === undefined;
 
 
       return (
               <div>
-                  {loading ? this.renderLoading() : this.renderEstimatePage()}
+                {
+                loading2 ? this.renderLoading() :
+                playerEstimates.length > 300 && player.get("answer") === undefined ? this.renderGameFull() :
+                this.renderEstimatePage()
+                }
               </div>
       );
   }
@@ -176,7 +187,8 @@ NewLayoutContentContainer = withTracker(rest => {
     const now = moment(TimeSync.serverTime(null, 1000));
 
     // Get the globalConfigs collection
-    const globalConfigs = Configs.find({}).fetch();
+    const globalConfigs = GameData.find({ "time": { $exists: true, $ne: null } }).fetch();
+    const playerEstimates = GameData.find({ "estimate": { $exists: true, $ne: null } }).fetch();
 
     const timeToStart = globalConfigs[0].time.timeToStart;
     
@@ -189,6 +201,7 @@ NewLayoutContentContainer = withTracker(rest => {
     return {
         now,
         loading,
+        playerEstimates,
         timeToStart, bufferTime, loginRefresh, prolificCode,
         globalConfigs,
         ...rest

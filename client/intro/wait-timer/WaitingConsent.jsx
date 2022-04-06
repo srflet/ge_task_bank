@@ -5,7 +5,7 @@ import Wrapper from "../../components/Wrapper";
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../../shared/api/collectionGroupsManagement'
+import { GameData } from '../../../shared/api/collectionGroupsManagement'
 
 // Handles all the timing stuff
 import { TimeSync } from "meteor/mizzao:timesync";
@@ -67,7 +67,7 @@ WaitingConsentPageContents = withTracker(rest => {
     const now = moment(TimeSync.serverTime(null, 1000));
 
     // Get the globalConfigs collection
-    const globalConfigs = Configs.find({}).fetch()[0];
+    const globalConfigs = GameData.find({}).fetch()[0];
     const timeToStart = globalConfigs.timeToStart
     // const timeToStart = "06:45"
 

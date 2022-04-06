@@ -3,7 +3,7 @@ import Wrapper from "../components/Wrapper";
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../shared/api/collectionGroupsManagement'
+import { GameData } from '../../shared/api/collectionGroupsManagement'
 
 export default class WaitingThankYou extends Component {
     static stepName = "Thanks";
@@ -67,7 +67,7 @@ WaitingThankYouContent = withTracker(rest => {
     }
 
     // Get the globalConfigs collection
-    const globalConfigs = Configs.find({}).fetch()[0];
+    const globalConfigs = GameData.find({}).fetch()[0];
     const prolificCode = globalConfigs.prolificCode
 
     return {

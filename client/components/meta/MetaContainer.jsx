@@ -13,6 +13,7 @@ export class MetaContainer extends Component {
     const isResponseStage = stage.name === "response";
 
     const showChat = chat && stage.name === "social";
+    const showSocial = treatment.hideSocialNumeric
 
     return (
       <div
@@ -28,12 +29,15 @@ export class MetaContainer extends Component {
             )}
           </>
         )}
-        {isResponseStage &&
-          <SummaryContainer {...this.props} isResponseStage={isResponseStage} />
+        {showChat ?
+          <div></div>
+        : (
+          <SummaryContainer {...this.props} isResponseStage={isResponseStage} /> 
+        )
         }
       </div>
     );
   }
-}
+} 
 
 export default MetaContainer;

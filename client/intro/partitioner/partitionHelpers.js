@@ -31,6 +31,9 @@ export function findSet(eObj, start) {
   
     const low = big.map(i => below[i]).concat(small.map(i => above[i]))
     const high = big.map(i => above[i]).concat(small.map(i => below[i]))
+
+    console.log(low)
+    console.log(high)
   
     // map the indexes of the current group to the original list and store in the groupId field
     low.map(x => eObj.find(est => est.playerId === x.playerId).groupId = `low_${start}`)

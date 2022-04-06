@@ -7,25 +7,16 @@ import Sorry from "./exit/Sorry";
 import Thanks from "./exit/Thanks";
 import Round from "./game/Round";
 import Consent from "./intro/Consent";
-import DemoStage from "./intro/DemoStage";
-import Instructions from "./intro/Instructions";
+
 import NewPlayerForm from "./intro/NewPlayerForm";
-import Quiz from "./intro/Quiz";
+
 import Username from "./intro/Username"
-import AttentionCheck from "./intro/AttentionCheck"
-import WaitingPage from "./intro/wait-timer/WaitingPage";
-import EstimatePage from "./intro/EstimatePage";
-import EstimatePageBackup from "./intro/estimate_backup";
-import Layout from "./intro/Layout";
+
 import RedirectPage from "./intro/RedirectPage";
-import RedirectPage2 from "./intro/RedirectPage2";
-import IntroExitPage from "./intro/IntroExitPage";
+
 import Stage2IntroPage from "./game/Stage2IntroPage";
 import IntroLayout from "./intro/IntroLayout";
 import IntroRound from "./intro/newIntroStyle/IntroRound";
-
-import WaitingConsent from "./intro/wait-timer/WaitingConsent";
-import WaitingThankYou from "./exit/WaitingThankYou";
 
 const isDev = false
 
@@ -45,7 +36,7 @@ if (!isDev) {
     // }
     //introSteps.push(WaitingPage)
     introSteps.push(IntroRound)
-    introSteps.push(RedirectPage2)
+    introSteps.push(RedirectPage)
     // introSteps.push(RedirectPage2)
     // introSteps.push(IntroExitPage)
     

@@ -1,6 +1,10 @@
 node_modules/
 packages/
 settings.json
+settings_intro.json
+settings_0.json
+settings_20.json
+credentials.js
 production.json
 prod.json
 staging.json
@@ -13,3 +17,4 @@ token.json
 local.json
 **/.idea
 .DS_Store
+

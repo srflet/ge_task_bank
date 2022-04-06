@@ -43,7 +43,6 @@ export class ResponseContainer extends Component {
     })
     console.log(neighbors)
     let answer = player.round.get("answer") ?? "N/A";
-    let socialExposure = false
 
     return (
       <div className="response-container">
@@ -51,14 +50,16 @@ export class ResponseContainer extends Component {
           <span className="text-dark-gray font-bold text-sm mb-2">
             Other Players Detailed
           </span>
+          <AutoRotate otherPlayers={neighbors} unit={unit} rate={1000} {...this.props} />
 
-          {neighbors.map((p, i) => {
+
+          {/* {neighbors.map((p, i) => {
             return (
             <li className="flex justify-between text-sm" key={i}>
             <Avatar socialExposure={socialExposure} player={p} />
             </li>
           );
-         })}
+         })} */}
         </div>
       </div>
     );

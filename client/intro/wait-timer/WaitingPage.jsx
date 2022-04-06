@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data"
-import { Configs } from '../../../shared/api/collectionGroupsManagement'
+import { GameData } from '../../../shared/api/collectionGroupsManagement'
 import { PlayerEstimates } from '../../../shared/api/PlayerEstimates'
 
 // Import components
@@ -125,9 +125,7 @@ class WaitingPageContent extends React.Component {
 
         // if game is counted down...
         if (timeout && playerReady) {
-
-            player.set("timeToStart", Configs.find({}).fetch()[0].timeToStart)
-            onNext()
+            onNext();
         }
 
         // save  player buffer time if available
@@ -215,7 +213,7 @@ WaitingPageContentContainer = withTracker(rest => {
     const now = moment(TimeSync.serverTime(null, 1000));
 
     // Get the globalConfigs collection
-    const globalConfigs = Configs.find({}).fetch();
+    const globalConfigs = GameData.find({ "time": { $exists: true, $ne: null } }).fetch();
 
     const timeToStart = globalConfigs[0].time.timeToStart;
     

@@ -1,120 +1,318 @@
-import React from "react";
-import { PlayerEstimates } from "../../shared/api/PlayerEstimates";
-import { findSet, makeArray } from "./partitioner/partitionHelpers";
+import React, { Component } from 'react'
 
-export default class RedirectPage extends React.Component {
-
-
-    countDownOne = () => {
-
-
-        const newTime = this.state.remainingTime - 1;
+// Import the config from the db
+import { withTracker } from "meteor/react-meteor-data"
+import { GameData } from '../../shared/api/collectionGroupsManagement'
+import { PlayerEstimates } from '../../shared/api/PlayerEstimates';
+import { findSet, makeArray } from './partitioner/partitionHelpers';
+import { cyrb53 } from '../../shared/helperFunctions/hashing';
 
 
-        this.setState({
-            remainingTime: newTime,
-        });
+// Import components
+import IntroLayout from './IntroLayout';
+import CountdownTimer from './wait-timer/components/CountdownTimer';
+import { IntroQuestion } from './meta/IntroQuestion';
+import PlayerResponse from './meta/summary/PlayerResponse';
 
-        if(this.state.remainingTime == 0) {
-            console.log("ZERO")
-            clearTimeout(this.countdownTimeout);
-            return;
-        }
+import { taskData } from '../../shared/tasks/default-tasks';
 
-        this.countdownTimeout = setTimeout(() => {
-            this.countDownOne();
-        }, 1000);
-    }
-
-    componentDidUpdate () {
-        const { player } = this.props;
-        //console.log(this.state.remainingTime)
-        if (this.state.remainingTime == 0) {
-            console.log("out of time")
-            let estimateObj = "hello"
-            const sub = Meteor.subscribe("player-estimates");
-            Tracker.autorun(() => {
-                if (sub.ready) {
-                    console.log("INSIDE THE TRACKER")
-                    estimateObj = PlayerEstimates.find({}).fetch()
-                    console.log(estimateObj)
-                    if (estimateObj.length === 0){
-                        let estObjSlice = estimateObj.slice(1).slice(-120)
-                        console.log(estObjSlice)
-        
-                        const groupSize = 20;
-                        const starts = makeArray(estObjSlice.length / (2 * groupSize), (i) => {
-                        return (i * groupSize)
-                        });
-                        
-                        starts.map(i => findSet(estObjSlice, i))
-                        console.log(starts)
-        
-                        console.log(estObjSlice)
-                    }
-                }
-
- 
-
-            //     // const playerGroup = estObjSlice.find(est => est.playerId === player.id).groupId 
-            //     // console.log(playerGroup)
-            //     // const url = new URL(window.location.href);
-            //     // console.log(window.location);
-            //     // console.log(url)
-
-            //     // const queryParams = new URLSearchParams(window.location.search);
-                
-                
-            //     // const playerIdKey = queryParams.get('playerIdKey');
-            //     // const playerAnswer = player.get("answer");
-            //     // const playerGroup = 25;
-            //     // const baseUrl = location.origin
-            //     // console.log(playerIdKey, playerAnswer, playerGroup)
-
-            //     // window.location.replace(baseUrl + '/?playerIdKey=whekgbwhkrgbkhw');
-
-            //     clearTimeout(this.countdownTimeout);
-            });
-
-            
-        };
-    }
-    
-
-    componentDidMount() {
-
-        this.countdownTimeout = setTimeout(() => {
-            this.countDownOne();
-        }, 1000);
-
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.countdownTimeout);
-    }
-
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            remainingTime: 5,
-        }
-    }
+// Handles all the timing stuff
+import { TimeSync } from "meteor/mizzao:timesync";
+import calcTimeRemaining from './wait-timer/components/timeHelpers';
+import moment from "moment";
 
 
+// Prepare the Estimate page
+export default class RedirectPage extends Component {
     render() {
+        const { onNext, player } = this.props;
 
-        const disabled = this.props.disabled == undefined ? false : this.props.disabled
+
         return (
-            <>
-                <p>
-                    Time remaining (for internal use only) {this.state.remainingTime}
-                </p>
-                <div>
-                    <p><strong>Please wait while we assign you to a group....</strong></p>
-                    <p><i>This will take less than 30 seconds!</i></p>
-                </div>
-            </>
+            <IntroLayout title="" {...this.props}>
+                {/* Load the db data which loads the page contents */}
+                <RedirectPageContentContainer onNext={onNext} player={player} />
+            </IntroLayout>
         )
     }
 }
+
+class RedirectPageContents extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const { redirectBuffer } = this.props;
+
+        this.state = { time: {}, seconds: redirectBuffer };
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
+      }
+    
+      secondsToTime(secs){
+        let hours = Math.floor(secs / (60 * 60));
+    
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+    
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+    
+        let obj = {
+          "h": hours,
+          "m": minutes,
+          "s": seconds
+        };
+        return obj;
+      }
+    
+      componentDidMount() {
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+        this.startTimer();
+      }
+    
+      startTimer() {
+          this.timer = setInterval(this.countDown, 1000);
+      }
+    
+      countDown(){
+        const { estimates, player, onNext } = this.props
+
+        const { redirectBuffer }= this.props;
+        if (redirectBuffer === undefined) {
+            console.log("line 84")
+            return
+        };
+
+        if (this.state.seconds === undefined) {
+            console.log(redirectBuffer)
+            this.setState({seconds: redirectBuffer})
+            let timeLeftVar = this.secondsToTime(this.state.seconds);
+            this.setState({ time: timeLeftVar });
+            console.log("line 91")
+            return
+        };
+
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        console.log(seconds)
+        this.setState({
+          time: this.secondsToTime(seconds),
+          seconds: seconds,
+        });
+        
+        
+        // Check if we're at zero.
+        if (seconds < 1) { 
+            clearInterval(this.timer);
+            
+            Meteor.call('getEstimates', { returnStubValue: true }, (error, estimates) => {
+                if(error){
+                  console.log("Error retrieving estimates" + error);
+                }
+         
+                //Logging values here shows the values as expected
+                console.log("inside apply" + JSON.stringify(estimates));
+                const groupSize = 20; // TODO: make group size flexible - generation of big/small arrays in partitionHelper.js need to handle 1:3 ratio. 
+
+                let estObjSlice = estimates.slice(0)
+                console.log(estObjSlice)
+                const totalN = estObjSlice.length
+                const extraN = estObjSlice.length % (2 * groupSize)
+                console.log(totalN - extraN)
+                console.log(estObjSlice.slice(0, totalN - extraN))
+
+                const est = estObjSlice.slice(0).sort((a, b) => a.estimate > b.estimate ? 1 : -1)
+                let useEst = est
+
+                // if (est.length % (2 * groupSize)) {
+                //     useEst = est.slice(0, totalN - extraN)
+                // }
+                
+                console.log(player.id)
+                console.log("Player mid: " + player.get("MID"))
+
+                if (useEst.length < 40) {
+                    console.log("you have been rejected")
+                    player.exit("rejectEstimate")
+                    return
+                }
+
+                if (useEst.filter(est => est.playerId === player.id).length === 0) {
+                    console.log("you have been rejected")
+                    player.exit("rejectEstimate")
+                    return
+                }
+
+                
+                const starts = makeArray(useEst.length / (2 * groupSize), (i) => {
+                return (i * groupSize)
+                });
+
+                console.log(useEst)
+                console.log(starts)
+                starts.map(i => findSet(useEst, i))
+
+
+                
+
+    
+                const playerGroupId = useEst.filter(est => est.playerId === player.id)[0].groupId
+                console.log("My group id: " + playerGroupId)
+
+                const queryParams = new URLSearchParams(window.location.search);
+                const playerIdKey = queryParams.get('playerIdKey');
+                const MID =  queryParams.get('MID');
+                const username =  player.get("username")
+                const serverId = playerGroupId.split("_")[1]
+                const playerAnswer = player.get("answer")
+                console.log(serverId)
+                const startUrl = "https://chatroom-server-";
+                const endUrl = ".meteorapp.com";
+                const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&playerAnswer=${playerAnswer}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
+                console.log(newUrl)
+
+                window.location.replace(newUrl)
+
+                
+            });
+
+            
+            console.log(estimates)
+            
+
+            // const groupSize = 20; // TODO: make group size flexible - generation of big/small arrays in partitionHelper.js need to handle 1:3 ratio. 
+
+            // let estObjSlice = estimates.slice(0)
+            // console.log(estObjSlice)
+            // const totalN = estObjSlice.length
+            // const extraN = estObjSlice.length % (2 * groupSize)
+            // console.log(totalN - extraN)
+            // console.log(estObjSlice.slice(0, totalN - extraN))
+
+            // const est = estObjSlice.slice(0).sort((a, b) => a.estimate > b.estimate ? 1 : -1)
+            // let useEst = est
+
+            // if (est.length % (2 * groupSize)) {
+            //     useEst = est.slice(0, totalN - extraN)
+            // }
+            
+            // console.log(player.id)
+
+            // if (useEst.filter(est => est.playerId === player.id).length === 0) {
+            //     console.log("you have been rejected")
+            //     player.exit("rejectEstimate")
+            //     return
+            // }
+
+            
+            // const starts = makeArray(useEst.length / (2 * groupSize), (i) => {
+            // return (i * groupSize)
+            // });
+
+            // starts.map(i => findSet(useEst, i))
+
+
+            // console.log(useEst)
+
+  
+            // const playerGroupId = useEst.filter(est => est.playerId === player.id)[0].groupId
+            // console.log("My group id: " + playerGroupId)
+
+            // const queryParams = new URLSearchParams(window.location.search);
+            // const playerIdKey = queryParams.get('playerIdKey');
+            // const MID =  queryParams.get('MID');
+            // const username =  player.get("username")
+            // const serverId = playerGroupId.split("_")[1]
+            // const playerAnswer = player.get("answer")
+            // console.log(serverId)
+            // const startUrl = "https://chatroom-server-";
+            // const endUrl = ".meteorapp.com";
+            // const newUrl = `${startUrl}${serverId}${endUrl}/?playerIdKey=${playerIdKey}&MID=${MID}&playerAnswer=${playerAnswer}&playerId=${username}&playerGroupId=${cyrb53(playerGroupId)}`
+            // console.log(newUrl)
+            
+            // window.location.replace(newUrl)
+        }
+
+
+      }
+
+    renderLoading() {
+        return (<center>Loading...</center>);
+    }
+
+
+    renderRedirectPage = () => {
+        return (
+          <div>
+              <p>
+                  Please wait while we assign you a group. This may take up to 30 seconds....
+              </p>
+
+              <div className="loader"></div>
+          </div>
+
+        )
+
+    }
+    
+    render() {
+        const { loading } = this.props
+        return (
+            <div className="bp3-non-ideal-state">
+                <div className="bp3-non-ideal-state-description">
+                    {loading ? this.renderLoading() : this.renderRedirectPage()}
+                    {/* {loading ? this.renderEstimatePage() : this.renderLoading()} */}
+                </div>
+
+            </div>
+
+        );
+    }
+};
+
+
+
+
+RedirectPageContentContainer = withTracker(rest => {
+
+    // Get the props
+    const { player, onNext } = rest
+    
+
+    // Suscribe to collection information, and return nothing as long as it is loading
+    const loading = !Meteor.subscribe("group-management").ready();
+    if (loading) {
+        return {
+            loading
+        }
+    }
+
+
+    // Get the globalConfigs collection
+    // const estimates = GameData.find({ "estimate": { $exists: true, $ne: null } }).fetch();
+    // console.log(estimates)
+    const timeData = GameData.find({ "redirectTimer": { $exists: true, $ne: null } }).fetch();
+    const redirectBuffer = timeData[0].redirectTimer.maxBuffer;
+    console.log(redirectBuffer)
+
+    // const data = PlayerEstimates.find({}).fetch();
+    // const estimates = data.filter(est => est.playerId !== "TIMER")
+    // const redirectBuffer = data.filter(est => est.playerId === "TIMER")[0].estimate
+
+    
+    
+    // const timeToStart = "06:45"
+    // const bufferTime = 65;
+    // const loginRefresh = globalConfigs.loginRefresh ?? 30;
+    // const prolificCode = globalConfigs.prolificCode;
+
+    return {
+        loading,
+        redirectBuffer,
+        ...rest
+    };
+
+})(RedirectPageContents);
+

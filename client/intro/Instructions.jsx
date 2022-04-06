@@ -3,7 +3,7 @@ import { CustomButton } from "../components/Button";
 import IntroLayout from "./IntroLayout";
 import { isMultiPlayer } from "../../shared/helper";
 import { instructions, taskData } from "../../shared/tasks/tasks";
-import { Configs } from "../../shared/api/collectionGroupsManagement";
+import { GameData } from "../../shared/api/collectionGroupsManagement";
 
 import { num2stringdecimals, instructionsInfo } from "./instructionsInfo"
 

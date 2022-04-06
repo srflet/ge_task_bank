@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // Import the config from the db
 import { withTracker } from "meteor/react-meteor-data";
-import { Configs } from '../../../shared/api/collection';
+import { GameData } from '../../../shared/api/collection';
 
 // Import components
 import IntroLayout from "../IntroLayout";
@@ -68,7 +68,7 @@ WaitingPageContentContainer = withTracker(rest => {
         }
     }
 
-    const globalConfigs = Configs.find({}).fetch()[0]
+    const globalConfigs = GameData.find({}).fetch()[0]
 
     // const timeToStart = new Date(globalConfigs.timeToStart)
     const timeToStart = new Date("May 19, 2021 23:20:25")

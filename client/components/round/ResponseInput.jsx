@@ -162,21 +162,21 @@ export default class ResponseInput extends React.Component {
 
     // If they haven't submitted...
 
-    if (stage.name === "social") {
-      // If it is a discreet social stage
-      if (interactionMode === "discreet") {
-        return ("OK")
-      }
+    // if (stage.name === "social") {
+    //   // If it is a discreet social stage
+    //   if (interactionMode === "discreet") {
+    //     return ("OK")
+    //   }
 
-      // If it is a continuous social stage
-      return ("Update")
-    }
+    //   // If it is a continuous social stage
+    //   return ("Update")
+    // }
 
 
     // If the player has submitted an answer previously this round
-    if (player.round.get("answer")) {
-      return ("Update")
-    }
+    // if (player.round.get("answer")) {
+    //   return ("Submit")
+    // }
 
     // Otherwise...
     return ("Submit")

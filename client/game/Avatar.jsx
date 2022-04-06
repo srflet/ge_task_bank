@@ -32,7 +32,7 @@ export function Avatar({ player, bordered, iconOnly, isAltLayout }) {
           }}
         ></div>
         <div className="ml-3 text-gray-500">
-        {iconOnly ? "" : player.id} {socialExposure ? player.get("firstAnswer") : ""}
+        {iconOnly ? "" : player.id}
         </div>
       </div>
     </div>

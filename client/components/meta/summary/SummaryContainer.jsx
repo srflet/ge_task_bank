@@ -37,11 +37,12 @@ export class SummaryContainer extends Component {
     }
   }
   render() {
-    const { isResponseStage } = this.props;
+    const { isResponseStage, game } = this.props;
+    const showSocial = game.treatment.hideSocialNumeric === false;
 
     return (
       <div className="summary-container">
-        {!isResponseStage && <SocialExposure {...this.props} isAltLayout />}
+        {!isResponseStage && showSocial && <SocialExposure {...this.props} isAltLayout />}
         {this.renderAnswer()}
       </div>
     );
